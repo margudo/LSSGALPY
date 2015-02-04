@@ -21,7 +21,7 @@ ra_pair, dec_pair, z_pair = np.loadtxt('table2.txt', usecols = (2,3,4), unpack=T
 ra_trip, dec_trip, z_trip = np.loadtxt('table3.txt', usecols = (2,3,4), unpack=True)      # table3: position and redshift for isolated triplets
 
 #----------------------------------------------------------------------
-# traslate RA form degrees to radian for the polar representation
+# traslate RA from degrees to radian for the polar representation
 rad, rad_isol, rad_pair, rad_trip = np.radians(ra), np.radians(ra_isol), np.radians(ra_pair), np.radians(ra_trip) #shift to radians
 
 #----------------------------------------------------------------------
