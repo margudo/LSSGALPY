@@ -4,7 +4,7 @@ This code contains the visualisation tools developed for the A&A Article Catalog
 
 The basic functionality of this interactive tool is the use of a Mollweide projection in the 3D space (right ascension, declination, and redshift) in combination with a wedge diagram to study the relation of the galaxies with the LSS.
 
-For more information, see http://LSSGALPY.github.com
+For more information, see https://github.com/margudo/LSSGALPY
 '''
 import numpy as np, matplotlib.pyplot as plt
 from astropy import coordinates as coord, units as u, constants, cosmology
