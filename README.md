@@ -12,7 +12,7 @@ The basic functionality of these interactive tools is the use of different proje
 
 Only copy all files in a directory and run LSSGALPY_mollweide.py or LSSGALPY_wedge.py to visualise the LSS environment using a mollweide projection or a wedge diagram, respectively.
 
-* Software Requirements:
+* Software Requirements: 
 
   * NumPy: array processing for numbers, strings, records, and objects;
   * matplotlib: Python 2D plotting library;
