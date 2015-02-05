@@ -1,5 +1,5 @@
 # LSSGALPY
-Python tool for the interactive 3D visualization of the large-scale environment on galaxies
+Python tool for the interactive visualization of the large-scale environment around galaxies on the 3D space (ra, dec, and redshift)
 
 * Interactive visualisation tools
 
