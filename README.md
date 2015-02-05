@@ -1,11 +1,11 @@
 # LSSGALPY
 Python tool for the interactive 3D visualization of the large-scale environment on galaxies
 
-* Interactive 3D visualisation tools
+* Interactive visualisation tools
 
-This code contains the visualisation tools developed for the A&A Article Catalogues of isolated galaxies, isolated pairs, and isolated triplets in the local Universe by M. Argudo-Fernández, S. Verley, G. Bergond, S. Duarte Puertas, E. Ramos Carmona, J. Sabater, M, Fernández-Lorenzo, D. Espada, J. Sulentic, and J. E. Ruiz.
+This code contains the visualisation tools developed for the A&A Article Catalogues of isolated galaxies, isolated pairs, and isolated triplets in the local Universe by M. Argudo-Fernández, S. Verley, G. Bergond, S. Duarte Puertas, E. Ramos Carmona, J. Sabater, M, Fernández-Lorenzo, D. Espada, J. Sulentic, J. E. Ruiz, and S. Leon.
 
-These tools currently work as widgets in a computer but could be easily integrated in a website for instance, using the IPython Notebook (web-based interactive computational environment).
+These tools currently work as widgets in a local computer but could be also accessed remotely with a browser when they are implemented in an IPython Notebook Server (web-based interactive computational environment).
 The basic functionality of these interactive tools is the use of different projections in the 3D space (right ascension, declination, and redshift) to study the relation of the galaxies with the LSS. In particular, we use a Mollweide projection (the code could also work with several tens of other types of projections) in combination with a wedge diagram, and viceversa. Therefore, we can visualise the locations of the galaxies in our study for different values of redshifts and redshift ranges. Similarly, for different values of the declinations and declination ranges (see lower panel of Fig. 1), one can visualise how the isolated galaxies, isolated pairs, and isolated triplets are related to the galaxies in the LSS. Additionally, one can, very easily and quickly, add or remove samples, change the marker size, transparency, and/or symbol, etc. These tools have been tested using up to 30 million objects and
 
 *  Installation:
