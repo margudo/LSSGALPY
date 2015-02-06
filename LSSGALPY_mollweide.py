@@ -15,9 +15,9 @@ from matplotlib.widgets import Slider, Button, RadioButtons, CheckButtons
 #----------------------------------------------------------------------
 # input catalogues
 ra, dec, z    = np.loadtxt('SDSS_DR10_galaxy_local.txt', usecols = (0,1,2), unpack=True)  # catalogue of ~300000 galaxies in the local Universe
-ra_isol, dec_isol, z_isol = np.loadtxt('table1.txt', usecols = (1,2,3), unpack=True)      # table1: position and redshift for isolated galaxies 
-ra_pair, dec_pair, z_pair = np.loadtxt('table2.txt', usecols = (2,3,4), unpack=True)      # table2: position and redshift for isolated pairs 
-ra_trip, dec_trip, z_trip = np.loadtxt('table3.txt', usecols = (2,3,4), unpack=True)      # table3: position and redshift for isolated triplets
+ra_isol, dec_isol, z_isol = np.loadtxt('table1.txt', usecols = (0,1,2), unpack=True)      # table1: position and redshift for isolated galaxies 
+ra_pair, dec_pair, z_pair = np.loadtxt('table2.txt', usecols = (0,1,2), unpack=True)      # table2: position and redshift for isolated pairs 
+ra_trip, dec_trip, z_trip = np.loadtxt('table3.txt', usecols = (0,1,2), unpack=True)      # table3: position and redshift for isolated triplets
 
 #----------------------------------------------------------------------
 # defining cosmology
