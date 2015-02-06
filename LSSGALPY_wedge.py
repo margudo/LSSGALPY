@@ -45,7 +45,7 @@ c, = plt.plot(rad_pair[cond_pair], z_pair[cond_pair], 'go', ms=4, alpha=.7, visi
 d, = plt.plot(rad_trip[cond_trip], z_trip[cond_trip], 'bo', ms=4, alpha=.7, visible=False)
 
 # Additional plot: Mollweide projection
-ax2 = plt.axes([0.74, 0.1, 0.25, 0.25], projection='mollweide')
+ax2 = plt.axes([0.74, 0.1, 0.25, 0.25], projection='mollweide', celestial=True)
 plt.grid(True)
 cond_z = (z >= .030) & (z < .031)
 x, y = np.radians(ra-180), np.radians(dec)
