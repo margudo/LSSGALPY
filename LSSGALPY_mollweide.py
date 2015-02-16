@@ -1,122 +1,83 @@
 # -*- coding: utf-8 -*-
 '''
-This code contains the visualisation tools developed for the A&A Article Catalogues of isolated galaxies, isolated pairs, and isolated triplets in the local Universe by M. Argudo-Fernández, S. Verley, G. Bergond, S. Duarte Puertas, E. Ramos Carmona, J. Sabater, M, Fernández-Lorenzo, D. Espada, J. Sulentic, and J. E. Ruiz.
+This code contains the visualisation tools developed for the A&A Article Catalogues of isolated galaxies, isolated pairs, and isolated triplets in the local Universe by M. Argudo-Fernández, S. Verley, G. Bergond, S. Duarte Puertas, E. Ramos Carmona, J. Sabater, M, Fernández-Lorenzo, D. Espada, J. Sulentic, J. E. Ruiz., and S. Leon.
 
 The basic functionality of this interactive tool is the use of a Mollweide projection in the 3D space (right ascension, declination, and redshift) in combination with a wedge diagram to study the relation of the galaxies with the LSS.
 
 For more information, see https://github.com/margudo/LSSGALPY 
 '''
 import numpy as np, matplotlib.pyplot as plt
-from astropy import coordinates as coord, units as u, constants, cosmology
 from mpl_toolkits.basemap import Basemap
-from mpl_toolkits.mplot3d import axes3d
-from matplotlib.widgets import Slider, Button, RadioButtons, CheckButtons
+from matplotlib.widgets import Slider, Button, CheckButtons
 
-#----------------------------------------------------------------------
-# input catalogues
-ra, dec, z    = np.loadtxt('SDSS_DR10_galaxy_local.txt', usecols = (0,1,2), unpack=True)  # catalogue of ~300000 galaxies in the local Universe
-ra_isol, dec_isol, z_isol = np.loadtxt('table1.txt', usecols = (0,1,2), unpack=True)      # table1: position and redshift for isolated galaxies 
-ra_pair, dec_pair, z_pair = np.loadtxt('table2.txt', usecols = (0,1,2), unpack=True)      # table2: position and redshift for isolated pairs 
-ra_trip, dec_trip, z_trip = np.loadtxt('table3.txt', usecols = (0,1,2), unpack=True)      # table3: position and redshift for isolated triplets
+# Input catalogues
+[ra, dec, z], [ra_isol, dec_isol, z_isol], [ra_pair, dec_pair, z_pair], [ra_trip, dec_trip, z_trip] = [np.loadtxt(filename+'.txt', usecols = (0, 1, 2), unpack=True) for filename in ['SDSS_DR10_galaxy_local', 'table1', 'table2', 'table3']]
 
-#----------------------------------------------------------------------
-# defining cosmology
-cosmo = cosmology.FlatLambdaCDM(H0=70., Om0=0.3)
-d = constants.c.to('km/s') * z / cosmo.H0
+ra_tot, dec_tot, z_tot = [ra, ra_isol, ra_pair, ra_trip], [dec, dec_isol, dec_pair, dec_trip], [z, z_isol, z_pair, z_trip]
 
-#----------------------------------------------------------------------
-# Plot
-plt.figure("Mollweide projection", figsize=(16.3, 8.4))
-plt.subplot(111)
-
-# default values for reset button
+# Default values for reset button
 z0, rang0, dec0, alpha0 = .030, .005, 30., .2
-zmin, zmax = z0, z0+rang0
-# Condition for the redhift range in the plots
-cond = (z >= z0) & (z < z0+rang0)
-cond_isol = (z_isol >= z0) & (z_isol < z0+rang0)
-cond_pair = (z_pair >= z0) & (z_pair < z0+rang0)
-cond_trip = (z_trip >= z0) & (z_trip < z0+rang0)
+
+# Plot
+fig = plt.figure("Mollweide projection", figsize=(16.3, 8.4))
+plt.subplot(111, xticks=[], yticks=[], frameon=False)
+ax2, ax1 = plt.axes([0.79, 0.05, 0.25, 0.25], polar=True), fig.add_axes([0.05, 0.14, 0.9, 0.8])
+
+# Mollweide projection
+m = Basemap(projection='moll', lon_0=180, resolution='c', celestial=True, ax=ax1)
 
 # Main plot: Mollweide projection
-m = Basemap(projection='moll', lon_0=180, resolution='c', celestial=True)
-m.drawmeridians(np.arange(0.,420.,60.)) ; m.drawparallels(np.arange(-90.,120.,30.), labels=[1,0,0,1])
-m.drawmapboundary(fill_color='w')
-# Translation of RA and DEC positions to Mollweide projection
-x, y = m(ra, dec)
-x_isol, y_isol = m(ra_isol, dec_isol)
-x_pair, y_pair = m(ra_pair, dec_pair)
-x_trip, y_trip = m(ra_trip, dec_trip)
-# Plotting galaxy positions in the selected redhift range
-b, = plt.plot(x[cond], y[cond], 'ko', ms=1, alpha=alpha0)
-c, = plt.plot(x_isol[cond_isol],y_isol[cond_isol], 'ro', ms=4, alpha=.7)
-d, = plt.plot(x_pair[cond_pair],y_pair[cond_pair], 'go', ms=4, alpha=.7, visible=False)
-e, = plt.plot(x_trip[cond_trip],y_trip[cond_trip], 'bo', ms=4, alpha=.7, visible=False)
+m.drawmeridians(np.arange(0., 420., 60.)) ; m.drawparallels(np.arange(-90., 120., 30.), labels=[1, 0, 0, 1]) ; m.drawmapboundary(fill_color='w')
 
-# Additional plot: wedge diagram
-ax2 = plt.axes([0.79, 0.05, 0.25, 0.25], polar=True)
-zeta = [0, 1, 1, 0]
+x, y = [[m(raval, decval)[i] for raval, decval in zip(ra_tot, dec_tot)] for i in range(0, 2)] # Translation of RA and DEC positions to Mollweide proj
+cond_z_tot = [((zval > z0) & (zval < z0+rang0)) for zval in z_tot] # Condition for the redhift range in the plots
+
+# Plotting galaxy positions in the selected redhift range
+xyplt = [plt.plot(x[i][cond_z_tot[i]], y[i][cond_z_tot[i]], krgb, ms=mval, alpha=alpval, visible=visi)[0] for i, krgb, mval, alpval, visi in zip(range(0, 4), ['ko', 'ro', 'go', 'bo'], [1, 4, 4, 4], [alpha0, .7, .7, .7], [True, True, False, False])]
+
+# Additional plot: Wedge diagram
 cond_dec = (dec > -1.) & (dec <= 1.)
 cond_z = (z[cond_dec] >= z0) & (z[cond_dec] < z0 + rang0)
-ax2.scatter(np.radians(ra[cond_dec]-95.), z[cond_dec], c=z[cond_dec], s=1, marker=',', lw=0, alpha=.1)
-ax2.scatter(np.radians(ra[cond_dec][cond_z]-95.), z[cond_dec][cond_z], c='r', s=1, marker=',', lw=0, alpha=1)
-ax2.bar(0., rang0, width=2*np.pi, bottom=z0, color='r', edgecolor='r', linewidth=0, alpha=.4)
+
+[ax2.scatter(np.radians(raval - 95), zval, c=colors, s=1, marker=',', lw=0, alpha=alpval) for raval, zval, colors, alpval in zip([ra[cond_dec], ra[cond_dec][cond_z]], [z[cond_dec], z[cond_dec][cond_z]], [z[cond_dec], 'r'], [.1, 1])]
+ax2.bar(0., rang0, width=2*np.pi, bottom=z0, color='r', edgecolor='r', lw=0, alpha=.4)
 ax2.set_rmax(.1)
-plt.setp(ax2.get_xticklabels(), fontsize=10)
-plt.setp(ax2.get_yticklabels(), fontsize=8)
+[plt.setp(getval, fontsize=fontval) for getval, fontval in zip([ax2.get_xticklabels(), ax2.get_yticklabels()], [10, 8])]
 
 # Location of sliders in the figure
-axcolor = 'lightgoldenrodyellow'
-axz = plt.axes([0.25, 0.06, 0.5, 0.03], axisbg=axcolor)
-axrang  = plt.axes([0.25, 0.02, 0.5, 0.03], axisbg=axcolor)
-axalpha = plt.axes([0.05, 0.1, 0.07, 0.03], axisbg=axcolor)
-# Definition of the sliders
-sz = Slider(axz, 'z', 0.0, .1, valinit=z0, valfmt='%1.3f')
-srang = Slider(axrang, 'Range', 0.0, .1, valinit=rang0, valfmt='%1.3f')
-salpha = Slider(axalpha, 'Transp.', 0.00, 1., valinit=alpha0)
+axz, axrang, axalpha = [plt.axes(val, axisbg='lightgoldenrodyellow') for val in [[0.25, 0.06, 0.5, 0.03], [0.25, 0.02, 0.5, 0.03], [0.05, 0.1, 0.07, 0.03]]]
 
-# the text on the figure
-fig_text = plt.figtext(0.5, 0.965, 'Mollweide projection within '+str(sz.val)+' < z < '+str(sz.val+srang.val), ha='center', color='black', weight='bold', size='large')
+# Definition of the sliders
+sz, srang, salpha = [Slider(axval, names, 0.0, valmax, valinit=val0, valfmt=vfmt) for axval, names, valmax, val0, vfmt in zip([axz, axrang, axalpha], ['z', 'Range', 'Transp.'], [.1, .1, 1.], [z0, rang0, alpha0], ['%1.3f', '%1.3f', '%1.2f'])]
+
+# Text in the figure
+fig_text = plt.figtext(0.5, 0.11, 'Mollweide projection within %1.3f < z < %1.3f' % (sz.val, sz.val+srang.val), ha='center', color='black', size='large')
 
 # Update of the plot with values in the sliders
 def update(val):
     '''This function updates the main and additional plots for new values of redshift, redshift range, and points transparency'''
-    rang = srang.val
-    zCen = sz.val
-    newAlpha = salpha.val
-    cond = (z >= zCen) & (z < zCen+rang)
-    cond_isol = (z_isol >= zCen) & (z_isol < zCen+rang)
+    rang, zCen, newAlpha = [sval.val for sval in [srang, sz, salpha]]
+    cond_df = [((zval >= zCen) & (zval < zCen+rang)) for zval in z_tot]
     cond_z = (z[cond_dec] >= zCen) & (z[cond_dec] < zCen+rang)
-    cond_pair = (z_pair >= zCen) & (z_pair < zCen+rang)
-    cond_trip = (z_trip >= zCen) & (z_trip < zCen+rang)
-    # update the value of the Text object
-    fig_text.set_text('Mollweide projection within '+str(round(zCen,3))+' < z < '+str(round(zCen,3)+round(rang,3)))
+    # Update the value of the Text object
+    fig_text.set_text('Mollweide projection within %1.3f < z < %1.3f' % (round(zCen,3), round(zCen,3)+round(rang,3)))
     ax2.cla()
-    ax2.scatter(np.radians(ra[cond_dec]-95.), z[cond_dec], c=z[cond_dec],  s=1, marker=',', lw=0, alpha=.05)
-    b.set_data(x[cond], y[cond])
-    c.set_data(x_isol[cond_isol], y_isol[cond_isol])
-    d.set_data(x_pair[cond_pair], y_pair[cond_pair])
-    e.set_data(x_trip[cond_trip], y_trip[cond_trip])
-    b.set_alpha(alpha=newAlpha)
-    ax2.scatter(np.radians(ra[cond_dec][cond_z]-95.), z[cond_dec][cond_z], c='r', s=1, marker=',', lw=0, alpha=1)
-    plt.setp(ax2.get_xticklabels(), fontsize=10)
-    plt.setp(ax2.get_yticklabels(), fontsize=8)
-    ax2.bar(0., rang, width=2*np.pi, bottom=zCen, color='r', edgecolor='r', linewidth=0, alpha=.4)
-    ax2.set_rmax(.1)   
+    [ax2.scatter(np.radians(raval - 95), zval, c=colors, s=1, marker=',', lw=0, alpha=alpval) for raval, zval, colors, alpval in zip([ra[cond_dec], ra[cond_dec][cond_z]], [z[cond_dec], z[cond_dec][cond_z]], [z[cond_dec], 'r'], [.1, 1])]
+    [xyp.set_data(x[i][cond_df[i]], y[i][cond_df[i]]) for xyp, i in zip(xyplt, range(0, 4))]
+    [plt.setp(getval, fontsize=fontval) for getval, fontval in zip([ax2.get_xticklabels(), ax2.get_yticklabels()], [10, 8])]
+    ax2.bar(0., rang, width=2*np.pi, bottom=zCen, color='r', edgecolor='r', lw=0, alpha=.4)
+    ax2.set_rmax(.1)
+    xyplt[0].set_alpha(alpha=newAlpha)  
     plt.draw()
-sz.on_changed(update)
-srang.on_changed(update)
-salpha.on_changed(update)
+[sval.on_changed(update) for sval in [sz, srang, salpha]]
 
-# Sample selection box
-rax = plt.axes([0.05, 0.15, 0.07, 0.15])
-check = CheckButtons(rax, ('LSS','Isolated', 'Pairs', 'Triplets'), (True, True, False, False))
+# Samples selection box
+rax, labels = plt.axes([0.05, 0.15, 0.07, 0.15]), ('LSS','Isolated', 'Pairs', 'Triplets')
+check = CheckButtons(rax, labels, (True, True, False, False))
 def func(label):
     '''This function allows the sample selection'''
-    if   label == 'LSS':      b.set_visible(not b.get_visible())
-    elif label == 'Isolated': c.set_visible(not c.get_visible())
-    elif label == 'Pairs':    d.set_visible(not d.get_visible())
-    elif label == 'Triplets': e.set_visible(not e.get_visible())
+    lab = labels.index(label)
+    xyplt[lab].set_visible(not xyplt[lab].get_visible())
     plt.draw()
 check.on_clicked(func)
 
@@ -125,9 +86,7 @@ resetax = plt.axes([0.05, 0.035, 0.07, 0.04])
 button = Button(resetax, 'Reset', color='red', hovercolor='green')
 def reset(event):
     '''This function reset the default values in the plots'''
-    sz.reset()
-    srang.reset()
-    salpha.reset()
+    [sval.reset() for sval in [sz, srang, salpha]]
 button.on_clicked(reset)
 
 plt.show()
