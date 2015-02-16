@@ -16,9 +16,7 @@ Only copy all files in a directory and run LSSGALPY_mollweide.py or LSSGALPY_wed
 
   * NumPy: array processing for numbers, strings, records, and objects;
   * matplotlib: Python 2D plotting library;
-  * basemap: add-on toolkit for matplotlib;
-  * mplot3D: add-on toolkit for matplotlib;
-  * astropy: community Python library for Astronomy.
+  * basemap: add-on toolkit for matplotlib.
 
 * License:
 
