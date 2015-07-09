@@ -1,4 +1,4 @@
-# LSSGALPY
+# LSSGalPy
 Python tool for the interactive visualization of the large-scale environment around galaxies on the 3D space 
 
 * Interactive visualisation tools
