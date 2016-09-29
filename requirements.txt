@@ -1,3 +1,0 @@
-numpy
-matplotlib
-https://github.com/matplotlib/basemap/archive/v1.0.7rel.tar.gz
