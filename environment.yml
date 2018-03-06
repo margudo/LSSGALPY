@@ -2,6 +2,8 @@ name: mybinder-environment
 
 dependencies:
 - python=2.7.12
+- ipywidgets
+- widgetsnbextension
 - numpy
 - matplotlib
 - basemap
