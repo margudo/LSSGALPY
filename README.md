@@ -28,6 +28,10 @@ Only copy all files in a directory and run LSSGALPY_mollweide.py or LSSGALPY_wed
   * NumPy: array processing for numbers, strings, records, and objects;
   * matplotlib: Python 2D plotting library;
   * basemap: add-on toolkit for matplotlib.
+ 
+* Update:
+
+  * For an updated version of this tool (no basemap requirement) visit https://gitlab.com/astrogal/LAVINCOMPY.
 
 * License:
 
